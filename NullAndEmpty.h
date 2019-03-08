@@ -1,0 +1,4 @@
+
+class NullType {};
+
+struct EmptyType {};
