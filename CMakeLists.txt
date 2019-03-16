@@ -13,4 +13,4 @@ add_executable(PracticeStuff
         PartialTemplateSpecialization.h
         NiftyContainer.h
         TypeToTypeMapping.h
-        TypeSelection.h)
+        TypeSelection.h TypeLists.h)

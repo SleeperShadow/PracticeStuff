@@ -23,7 +23,9 @@ T* create(U const& arg)
 {
 	return new T(arg);
 }
-// we have to overload if some type has its own specific constructor such as Widget for example
+// if some type has its own specific constructor
+//  we have to overload and pass in a Object of the type we want to construct
+// such as Widget for example
 // which means we have to construct a Widget, which for complex objects is a huge drawback
 template <class U>
 sample::Widget* create(U const& arg, sample::Widget)
