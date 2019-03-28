@@ -14,3 +14,7 @@ add_executable(PracticeStuff
         NiftyContainer.h
         TypeToTypeMapping.h
         TypeSelection.h TypeLists.h)
+		Conversions.h
+		NullAndEmpty.h
+		TypeTraits.h
+		CopyAlg.h)

@@ -1,3 +1,4 @@
+#pragma once
 #include "NullAndEmpty.h"
 #include "Conversions.h"
 
