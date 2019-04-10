@@ -30,13 +30,13 @@ struct NiftyValueContainerTraits<Type, false>
 template <bool flag, typename T, typename U>
 struct SelectType
 {
-	typedef T type;
+	typedef T Result;
 };
 
 template <typename T, typename U>
 struct SelectType<false, T, U>
 {
-	typedef U type;
+	typedef U Result;
 };
 
 template <typename T, bool isPolymorphic>

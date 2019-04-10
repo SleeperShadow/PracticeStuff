@@ -15,11 +15,12 @@ int main()
 	TypeTraits<std::vector<int>>::ParameterType vectorref = r;
 	
 	std::cout << TL::length< TL::signedIntegrals>::value << std::endl;
-	std::cout<<TL::length<TL::EraseType<TL::signedIntegrals, long>::result>::value<<std::endl;
+	std::cout<<TL::length<TL::EraseType<TL::signedIntegrals, long>::Result>::value<<std::endl;
 
 
 	TL::tryOutClassGeneration();
 	TL::tryOutClassGeneration2();
 
+	TL::tryOutIndexedGetter();
 	return 0;
 }

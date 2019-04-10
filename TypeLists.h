@@ -11,15 +11,15 @@
 template <class T, class U>
 struct TypeList
 {
-	typedef T head;
-	typedef U tail;
+	typedef T Head;
+	typedef U Tail;
 };
 
 template <class T>
 struct TypeList<T, NullType>
 {
-	typedef T head;
-	typedef NullType tail;
+	typedef T Head;
+	typedef NullType Tail;
 };
 
 
@@ -50,13 +50,13 @@ namespace TL
 
 	template <class Head, class Tail> struct TypeAt<TypeList<Head, Tail>, 0>
 	{
-		typedef Head result;
+		typedef Head Result;
 	};
 
 	template <class Head, class Tail, unsigned int index>
 	struct TypeAt<TypeList<Head,Tail>, index>
 	{
-		typedef typename TypeAt<Tail, index - 1>::result result;
+		typedef typename TypeAt<Tail, index - 1>::Result Result;
 	};
 
 	template<class TList, class T> struct IndexOf;
@@ -83,106 +83,106 @@ namespace TL
 
 	template <> struct Append<NullType, NullType>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 	template <class T> struct Append<NullType, T>
 	{
-		typedef TYPELIST_1(T) result;
+		typedef TYPELIST_1(T) Result;
 	};
 
 	template <class Head, class Tail> struct Append<NullType, TypeList<Head, Tail>>
 	{
-		typedef TypeList<Head, Tail> result;
+		typedef TypeList<Head, Tail> Result;
 	};
 
 	template <class Head, class Tail, class T> struct Append<TypeList<Head, Tail>, T>
 	{
-		typedef TypeList<Head, typename Append<Tail, T>::result> result;
+		typedef TypeList<Head, typename Append<Tail, T>::Result> Result;
 	};
 
-	typedef Append<signedIntegrals, TYPELIST_3(float, double, long double)>::result signedTypes;
+	typedef Append<signedIntegrals, TYPELIST_3(float, double, long double)>::Result signedTypes;
 
 
 	template<typename TList, typename Type>struct EraseType;
 	template<typename Type> struct EraseType<NullType, Type>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 
 	template<typename Head, typename Tail> struct EraseType<TypeList<Head, Tail>, Head>
 	{
-		typedef Tail result;
+		typedef Tail Result;
 	};
 
 	template<typename Head, typename Tail, typename Type> struct EraseType<TypeList<Head, Tail>, Type>
 	{
-		typedef TypeList<Head, typename EraseType<Tail, Type>::result> result;
+		typedef TypeList<Head, typename EraseType<Tail, Type>::Result> Result;
 	};
 
 	template<typename TList, typename Type> struct EraseAll;
 	template<typename Type> struct EraseAll<NullType, Type>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 
 	template<typename Tail, typename Type> struct EraseAll<TypeList<Type, Tail>, Type>
 	{
-		typedef typename EraseAll<Tail, Type>::result result;
+		typedef typename EraseAll<Tail, Type>::Result Result;
 	};
 
 	template<typename Head, typename Tail, typename Type> struct EraseAll<TypeList<Head, Tail>, Type>
 	{
-		typedef TypeList<Head, typename EraseAll<Tail, Type>::result> result;
+		typedef TypeList<Head, typename EraseAll<Tail, Type>::Result> Result;
 	};
 
 	template<typename TList> struct  NoDuplicates;
 
 	template<> struct NoDuplicates<NullType>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 
 	template<typename Head, typename Tail> struct NoDuplicates<TypeList<Head, Tail>>
 	{
 	private:
-		typedef typename NoDuplicates<Tail>::result L1;
-		typedef typename EraseType<L1, Head>::result L2;
+		typedef typename NoDuplicates<Tail>::Result L1;
+		typedef typename EraseType<L1, Head>::Result L2;
 	public:
-		typedef TypeList<Head, L2> result;
+		typedef TypeList<Head, L2> Result;
 	};
 
 	template<typename TList, typename Type, typename NewType> struct ReplaceType;
 
 	template<typename Type, typename NewType> struct ReplaceType<NullType, Type, NewType>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 
 	template<typename Tail, typename Type, typename NewType> struct ReplaceType<TypeList<Type, Tail>, Type, NewType>
 	{
-		typedef TypeList<NewType, Tail> result;
+		typedef TypeList<NewType, Tail> Result;
 	};
 
 	template<typename Head, typename Tail, typename Type, typename NewType> struct ReplaceType<TypeList<Head, Tail>, Type, NewType>
 	{
-		typedef TypeList<Head, typename ReplaceType<Tail, Type, NewType>::result> result;
+		typedef TypeList<Head, typename ReplaceType<Tail, Type, NewType>::Result> Result;
 	};
 
 	template<typename TList, typename Type, typename NewType> struct ReplaceAll;
 
 	template<typename Type, typename NewType> struct ReplaceAll<NullType, Type, NewType>
 	{
-		typedef NullType result;
+		typedef NullType Result;
 	};
 
 	template<typename Tail, typename Type, typename NewType> struct ReplaceAll<TypeList<Type, Tail>, Type, NewType>
 	{
-		typedef TypeList<NewType, typename ReplaceAll<Tail, Type, NewType>::result> result;
+		typedef TypeList<NewType, typename ReplaceAll<Tail, Type, NewType>::Result> Result;
 	};
 
 	template<typename Head, typename Tail, typename Type, typename NewType> struct ReplaceAll<TypeList<Head, Tail>, Type, NewType>
 	{
-		typedef TypeList<Head, typename ReplaceAll<Tail, Type, NewType>::result> result;
+		typedef TypeList<Head, typename ReplaceAll<Tail, Type, NewType>::Result> Result;
 	};
 
 	template<class TList, class T> struct MostDerived;

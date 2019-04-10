@@ -48,6 +48,9 @@ private:
 
 	template <class U> struct UnConst { typedef U Result; };
 	template <class U> struct UnConst <const U> { typedef U Result; };
+
+	template <class U> struct IsConst { enum { Result = false }; };
+	template <class U> struct IsConst <const U> { enum { Result = true }; };
 public:
 	enum { isPointer = PointerTraits<T>::result };
 	typedef typename PointerTraits<T>::PointeeType PointeeType;
@@ -57,4 +60,8 @@ public:
 
 	typedef typename SelectType<!isPrimitive && !isMemberPointer && !isPointer, T>::type ParameterType;
 	typedef typename UnConst<T>::Result NonConstType;
+
+	enum {
+		isConst = IsConst<T>::Result,
+	};
 };

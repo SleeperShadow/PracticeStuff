@@ -45,6 +45,20 @@ namespace TL
 		T _value;
 	};
 
+	template <class T>
+	struct TupleUnit
+	{
+		T value_;
+		operator T& () { return value_; }
+		operator const T& () { return value_; }
+	};
+
+	template <class TList>
+	struct Tuple : public GenScatterHierarchy<TList, TupleUnit>
+	{
+
+	};
+
 	// the below typedef gives us a class that inherits from Holder<int>, Holder<double> and Holder<float>
 	// assuming that the compiler optimizes away the empty classes such as TypeList<NullType, Holder>
 	typedef GenScatterHierarchy<TYPELIST_3(std::string, int, float), Holder> Info;
@@ -84,6 +98,71 @@ namespace TL
 	 }
 
 
+	 template <typename H, unsigned int i> struct FieldHelper;
 
+	 template <typename H> struct FieldHelper<H, 0>
+	 {
+		 typedef typename H::TList::Head ElementType;
+		 typedef typename H::template Rebind<ElementType>::Result UnitType;
 
+		 enum {
+			 isConst = TypeTraits<H>::isConst,
+			 isTuple = Conversion<UnitType, TupleUnit<ElementType>>::sameType,
+		 };
+		 
+		 typedef const typename H::LeftBase ConstLeftBase;
+		 //if H is const select the const type
+		 typedef typename SelectType<isConst, ConstLeftBase, typename H::LeftBase>::Result LeftBase;
+
+		 typedef const typename H::RightBase ConstRightBase;
+		 // if H is const select the const type
+		 typedef typename SelectType<isConst, ConstRightBase, typename H::RightBase>::Result RightBase;
+
+		 typedef typename SelectType<isTuple, const ElementType, UnitType>::Result UnqualifiedResultType;
+
+		 typedef typename SelectType<isConst, const UnqualifiedResultType, UnqualifiedResultType>::Result ResultType;
+
+		 static ResultType& Do(H& obj)
+		 {
+			 LeftBase& leftBase = obj;
+			 return leftBase;
+		 }
+	 };
+
+	 template<typename H, unsigned int i> struct FieldHelper
+	 {
+		 typedef typename TL::TypeAt<typename H::TList, i>::Result ElementType;
+		 typedef typename H::template Rebind<ElementType>::Result UnitType;
+
+		 enum {
+			 isConst = TypeTraits<H>::isConst,
+			 isTuple = Conversion<UnitType, TupleUnit<ElementType>>::sameType,
+		 };
+
+		 typedef const typename H::RightBase ConstRightBase;
+		 typedef typename SelectType<isConst, ConstRightBase, typename H::RightBase> RightBase;
+
+		 typedef typename SelectType<isTuple, ElementType, UnitType>::Result UnqualifiedResultType;
+		 typedef typename SelectType<isConst, const UnqualifiedResultType, UnqualifiedResultType>::Result ResultType;
+
+		 static ResultType& Do(H& obj)
+		 {
+			 RightBase& rightBase = obj;
+			 return FieldHelper<RightBase, i - 1>::Do(rightBase);
+		 }
+	 };
+
+	 template <int i, class H>
+	 typename FieldHelper<H, i>::ResultType& Field(H& obj)
+	 {
+		 return FieldHelper<H, i>::Do(obj);
+	 }
+
+	 void tryOutIndexedGetter()
+	 {
+		 Info info;
+
+		 (static_cast<Holder<std::string>&>(info))._value = "something";
+		 std::cout << Field<0>(info)._value<<std::endl;
+	 }
 }
